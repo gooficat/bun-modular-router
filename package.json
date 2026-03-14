@@ -2,7 +2,7 @@
   "name": "bun-modular-router",
   "module": "index.ts",
   "main": "index.ts",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "author": {
     "email": "hsabri2007@gmail.com",
     "name": "Hasan Sabri",
