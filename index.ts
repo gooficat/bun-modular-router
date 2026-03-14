@@ -2,16 +2,18 @@
 type RouteHandler = (req: Bun.BunRequest) => Response
 type AsyncRouteHandler = (req: Bun.BunRequest) => Promise<Response>
 
+type FlatRouteTypesRecursive = RouteHandler | AsyncRouteHandler | Response
+
 type RouteMethods = {
-	GET?: FlatRouteTypes,
-	HEAD?: FlatRouteTypes,
-	POST?: FlatRouteTypes,
-	PUT?: FlatRouteTypes,
-	DELETE?: FlatRouteTypes,
-	CONNECT?: FlatRouteTypes,
-	OPTIONS?: FlatRouteTypes,
-	TRACE?: FlatRouteTypes,
-	PATCH?: FlatRouteTypes,
+	GET?: FlatRouteTypesRecursive,
+	HEAD?: FlatRouteTypesRecursive,
+	POST?: FlatRouteTypesRecursive,
+	PUT?: FlatRouteTypesRecursive,
+	DELETE?: FlatRouteTypesRecursive,
+	CONNECT?: FlatRouteTypesRecursive,
+	OPTIONS?: FlatRouteTypesRecursive,
+	TRACE?: FlatRouteTypesRecursive,
+	PATCH?: FlatRouteTypesRecursive,
 }
 
 type FlatRouteTypes = RouteHandler | AsyncRouteHandler | RouteMethods | Response | Bun.HTMLBundle
