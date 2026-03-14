@@ -10,20 +10,17 @@ type ModularRoutes = {
 
 function ModularRouter(routesIn: ModularRoutes): FlatRoutes
 {
-	function collapse(routes: ModularRoutes, prefix: string): FlatRoutes
+	let routesOut: FlatRoutes = {}
+	function collapse(routes: ModularRoutes, prefix: string)
 	{
-		let routesOut: FlatRoutes = {}
-
 		for (const [key, val] of Object.entries(routes))
 			if (typeof val === "function")
 				routesOut[prefix + key] = val as RouteHandler
 			else
 				collapse(val as ModularRoutes, prefix + key)
-
-		return routesOut
 	}
 
-	return collapse(routesIn, "")
+	return routesOut
 }
 
 export default ModularRouter
