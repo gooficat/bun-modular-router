@@ -19,7 +19,7 @@ function ModularRouter(routesIn: ModularRoutes): FlatRoutes
 			else
 				collapse(val as ModularRoutes, prefix + key)
 	}
-
+	collapse(routesIn, "")
 	return routesOut
 }
 
