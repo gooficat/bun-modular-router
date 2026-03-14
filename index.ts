@@ -1,28 +1,29 @@
-import path from "path"
-
 type RouteHandler = (req: Bun.BunRequest) => Response
+
+type FlatRoutes = {
+	[key: string]: RouteHandler
+}
 
 type ModularRoutes = {
 	[key: string]: ModularRoutes | RouteHandler
 }
 
-function ModularRouter(req: Bun.BunRequest, node: ModularRoutes | RouteHandler, clientPath: string): Response
+function ModularRouter(routesIn: ModularRoutes): FlatRoutes
 {
-	function walk(node: ModularRoutes | RouteHandler | undefined, route: string[]): Response
+	function collapse(routes: ModularRoutes, prefix: string): FlatRoutes
 	{
-		if (!node)
-		{
-			let pat = new URL(req.url).pathname
-			if (pat === "/") pat = "index.html"
-			return new Response(Bun.file(path.join(clientPath, pat)))
-		}
-		if (typeof node === "function")
-			return node(req)
-		return walk(node[route[0]!], route.slice(1))
-	}
-	return walk(node, new URL(req.url).pathname.split("/").filter(Boolean))
-}
+		let routesOut: FlatRoutes = {}
 
-export { ModularRouter, type RouteHandler, type ModularRoutes }
+		for (const [key, val] of Object.entries(routes))
+			if (typeof val === "function")
+				routesOut[prefix + key] = val as RouteHandler
+			else
+				collapse(val as ModularRoutes, prefix + key)
+
+		return routesOut
+	}
+
+	return collapse(routesIn, "")
+}
 
 export default ModularRouter
