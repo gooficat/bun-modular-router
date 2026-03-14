@@ -1,3 +1,4 @@
+
 type RouteHandler = (req: Bun.BunRequest) => Response
 
 type FlatRoutes = {
@@ -5,7 +6,7 @@ type FlatRoutes = {
 }
 
 type ModularRoutes = {
-	[key: string]: ModularRoutes | RouteHandler
+	[key: string]: ModularRoutes | RouteHandler | Bun.HTMLBundle
 }
 
 function ModularRouter(routesIn: ModularRoutes): FlatRoutes
@@ -14,10 +15,13 @@ function ModularRouter(routesIn: ModularRoutes): FlatRoutes
 	function collapse(routes: ModularRoutes, prefix: string)
 	{
 		for (const [key, val] of Object.entries(routes))
-			if (typeof val === "function")
-				routesOut[prefix + key] = val as RouteHandler
+		{
+
+			if (typeof val === "function" || val.index)
+				routesOut[prefix + key] = val as any
 			else
 				collapse(val as ModularRoutes, prefix + key)
+		}
 	}
 	collapse(routesIn, "")
 	return routesOut
